@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <body>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: radial-gradient(1200px 600px at 10% 10%, rgba(34, 211, 238, 0.15), transparent 60%),
+                        radial-gradient(900px 500px at 90% 20%, rgba(168, 85, 247, 0.12), transparent 60%),
+                        linear-gradient(135deg, #050914 0%, #0b1220 50%, #0a1a2f 100%);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+            color: #d9f1ff;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: linear-gradient(rgba(34, 211, 238, 0.06) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(34, 211, 238, 0.06) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(600px 300px at 50% 0%, rgba(34, 211, 238, 0.12), transparent 60%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Animated background particles */
+        .bg-particle {
+            position: fixed;
+            background: radial-gradient(circle, rgba(34, 211, 238, 0.25), rgba(168, 85, 247, 0.05));
+            border-radius: 50%;
+            filter: blur(1px);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .bg-particle:nth-child(1) {
+            width: 300px;
+            height: 300px;
+            top: 10%;
+            left: 5%;
+        }
+
+        .bg-particle:nth-child(2) {
+            width: 200px;
+            height: 200px;
+            top: 60%;
+            right: 10%;
+        }
+
+        .bg-particle:nth-child(3) {
+            width: 250px;
+            height: 250px;
+            bottom: 10%;
+            left: 50%;
+        }
+
+        .header {
+            background: linear-gradient(135deg, rgba(8, 18, 40, 0.95) 0%, rgba(11, 26, 54, 0.95) 100%);
+            color: #e9f7ff;
+            padding: 30px 20px;
+            box-shadow: 0 0 25px rgba(34, 211, 238, 0.2), inset 0 0 30px rgba(168, 85, 247, 0.08);
+            border-bottom: 1px solid rgba(34, 211, 238, 0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            position: relative;
+            z-index: 10;
+            overflow: hidden;
+            backdrop-filter: blur(6px);
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(34, 211, 238, 0.2), transparent);
+            animation: shimmer 4s infinite;
+        }
+
+        @keyframes shimmer {
+            0% {
+                transform: translateX(-100%) translateY(-100%) rotate(45deg);
+            }
+            100% {
+                transform: translateX(100%) translateY(100%) rotate(45deg);
+            }
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 0 12px rgba(34, 211, 238, 0.6);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn-small {
+            padding: 10px 20px;
+            background: rgba(10, 23, 44, 0.7);
+            color: #e6f7ff;
+            border: 1px solid rgba(34, 211, 238, 0.6);
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 18px rgba(34, 211, 238, 0.15);
+        }
+
+        .btn-small::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(34, 211, 238, 0.4);
+            transform: translate(-50%, -50%);
+            transition: width 0.5s, height 0.5s;
+        }
+
+        .btn-small:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-small:hover {
+            color: #05111d;
+            background: rgba(34, 211, 238, 0.9);
+            border-color: rgba(34, 211, 238, 0.9);
+            box-shadow: 0 0 25px rgba(34, 211, 238, 0.5);
+        }
+
+        .btn-small span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .countdown-timer {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            position: relative;
+            z-index: 1;
+            background: rgba(255, 107, 107, 0.15);
+            border: 1px solid rgba(255, 107, 107, 0.4);
+            padding: 12px 20px;
+            border-radius: 8px;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 0 15px rgba(255, 107, 107, 0.2);
+        }
+
+        .countdown-timer.warning {
+            background: rgba(255, 193, 7, 0.15);
+            border-color: rgba(255, 193, 7, 0.4);
+            box-shadow: 0 0 15px rgba(255, 193, 7, 0.2);
+        }
+
+        .countdown-timer.critical {
+            background: rgba(255, 107, 107, 0.25);
+            border-color: rgba(255, 107, 107, 0.6);
+            box-shadow: 0 0 20px rgba(255, 107, 107, 0.4);
+            animation: pulse-critical 1s ease-in-out infinite;
+        }
+
+        @keyframes pulse-critical {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .countdown-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #ffb3b3;
+            font-weight: 600;
+        }
+
+        .countdown-timer.warning .countdown-label {
+            color: #ffd699;
+        }
+
+        .countdown-time {
+            font-size: 20px;
+            font-weight: 700;
+            color: #ff6b6b;
+            font-family: 'Courier New', monospace;
+            min-width: 80px;
+            text-align: center;
+            text-shadow: 0 0 8px rgba(255, 107, 107, 0.5);
+        }
+
+        .countdown-timer.warning .countdown-time {
+            color: #ffc107;
+            text-shadow: 0 0 8px rgba(255, 193, 7, 0.5);
+        }
+
+        .countdown-icon {
+            font-size: 22px;
+            animation: countdown-pulse 1s ease-in-out infinite;
+        }
+
+        @keyframes countdown-pulse {
+            0%, 100% {
+                transform: scale(1) rotate(0deg);
+            }
+            50% {
+                transform: scale(1.2) rotate(-15deg);
+            }
+        }
+
+        .countdown-timer.critical .countdown-icon {
+            animation: countdown-pulse 0.5s ease-in-out infinite;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: rgba(8, 18, 40, 0.85);
+            border-radius: 10px;
+            padding: 25px;
+            border: 1px solid rgba(34, 211, 238, 0.2);
+            box-shadow: 0 0 18px rgba(34, 211, 238, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(34, 211, 238, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .stat-card:hover::before {
+            left: 100%;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 0 28px rgba(34, 211, 238, 0.3);
+        }
+
+        .stat-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .stat-title {
+            color: #7cc7ff;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 8px;
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: 700;
+            color: #e6f7ff;
+            text-shadow: 0 0 10px rgba(34, 211, 238, 0.4);
+        }
+
+        .sections {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .section-card {
+            background: rgba(8, 18, 40, 0.88);
+            border-radius: 12px;
+            box-shadow: 0 0 16px rgba(34, 211, 238, 0.08);
+            border: 1px solid rgba(34, 211, 238, 0.18);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .section-card:hover {
+            transform: translateY(-8px) rotate(0.5deg);
+            box-shadow: 0 0 30px rgba(168, 85, 247, 0.35);
+        }
+
+        .section-header {
+            background: linear-gradient(135deg, rgba(14, 116, 144, 0.9) 0%, rgba(88, 28, 135, 0.9) 100%);
+            color: #e8fbff;
+            padding: 20px;
+            font-size: 18px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-shadow: 0 0 8px rgba(34, 211, 238, 0.6);
+        }
+
+        .section-body {
+            padding: 25px;
+        }
+
+        .section-body p {
+            color: #b9d7ea;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .btn-section {
+            display: inline-block;
+            padding: 12px 25px;
+            background: linear-gradient(135deg, #22d3ee 0%, #a855f7 100%);
+            color: #05111d;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 18px rgba(34, 211, 238, 0.35);
+        }
+
+        .btn-section::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(5, 17, 29, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn-section:hover::after {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-section:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 0 28px rgba(34, 211, 238, 0.6);
+        }
+
+        .list-item {
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(34, 211, 238, 0.12);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .list-item:last-child {
+            border-bottom: none;
+        }
+
+        .list-item-name {
+            color: #d7f2ff;
+            font-weight: 600;
+        }
+
+        .list-item-value {
+            background: rgba(10, 23, 44, 0.8);
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            color: #9fdcff;
+            border: 1px solid rgba(34, 211, 238, 0.2);
+        }
+
+        .footer {
+            margin-top: 60px;
+            padding: 30px;
+            background: rgba(8, 18, 40, 0.85);
+            border-radius: 10px;
+            text-align: center;
+            color: #9ec8df;
+            font-size: 14px;
+            border: 1px solid rgba(34, 211, 238, 0.2);
+            box-shadow: 0 0 16px rgba(34, 211, 238, 0.1);
+            backdrop-filter: blur(8px);
+        }
+
+        @keyframes revealUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes revealRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+            }
+
+            .container {
+                padding: 20px 10px;
+            }
+
+            .sections {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background particles -->
+    <div class="bg-particle"></div>
+    <div class="bg-particle"></div>
+    <div class="bg-particle"></div>
+
+    <div class="header">
+        <h1>🛡️ Admin Dashboard</h1>
+        <div class="countdown-timer" id="countdownTimer">
+            <span class="countdown-icon">⏱️</span>
+            <div>
+                <div class="countdown-label">Session Timeout</div>
+                <div class="countdown-time" id="countdownDisplay">15:00</div>
+            </div>
+        </div>
+        <div class="header-actions">
+            <a href="/" class="btn-small"><span>Home</span></a>
+            <a href="/admin_logout/" class="btn-small"><span>Logout</span></a>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Statistics Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">👥</div>
+                <div class="stat-title">Total Users</div>
+                <div class="stat-number">1,245</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📊</div>
+                <div class="stat-title">Total Projects</div>
+                <div class="stat-number">89</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">⚙️</div>
+                <div class="stat-title">System Status</div>
+                <div class="stat-number" style="color: #27ae60;">Active</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📈</div>
+                <div class="stat-title">Monthly Growth</div>
+                <div class="stat-number">+12.5%</div>
+            </div>
+        </div>
+
+        <!-- Management Sections -->
+        <div class="sections">
+            <div class="section-card">
+                <div class="section-header">
+                    <span>👤</span> User Management
+                </div>
+                <div class="section-body">
+                    <p>Manage user accounts, permissions, and access controls.</p>
+                    <div class="list-item">
+                        <span class="list-item-name">Active Users</span>
+                        <span class="list-item-value">1,120</span>
+                    </div>
+                    <div class="list-item">
+                        <span class="list-item-name">Inactive Users</span>
+                        <span class="list-item-value">125</span>
+                    </div>
+                    <div class="list-item">
+                        <span class="list-item-name">Pending Approval</span>
+                        <span class="list-item-value">12</span>
+                    </div>
+                    <br>
+                    <a href="/admin/users/" class="btn-section">Manage Users</a>
+                </div>
+            </div>
+
+            <div class="section-card">
+                <div class="section-header">
+                    <span>📋</span> Content Management
+                </div>
+                <div class="section-body">
+                    <p>Create, edit, and manage website content and pages.</p>
+                    <div class="list-item">
+                        <span class="list-item-name">Published Pages</span>
+                        <span class="list-item-value">45</span>
+                    </div>
+                    <div class="list-item">
+                        <span class="list-item-name">Drafts</span>
+                        <span class="list-item-value">8</span>
+                    </div>
+                    <div class="list-item">
+                        <span class="list-item-name">Scheduled</span>
+                        <span class="list-item-value">3</span>
+                    </div>
+                    <br>
+                    <a href="/admin/content/" class="btn-section">Manage Content</a>
+                </div>
+            </div>
+
+            <div class="section-card">
+                <div class="section-header">
+                    <span>⚙️</span> System Settings
+                </div>
+                <div class="section-body">
+                    <p>Configure system settings, security, and preferences.</p>
+                    <div class="list-item">
+                        <span class="list-item-name">Backup Status</span>
+                        <span class="list-item-value">Latest</span>
+                    </div>
+                    <div class="list-item">
+                        <span class="list-item-name">Database Size</span>
+                        <span class="list-item-value">2.5 GB</span>
+                    </div>
+                    <div class="list-item">
+                        <span class="list-item-name">Version</span>
+                        <span class="list-item-value">6.0.1</span>
+                    </div>
+                    <br>
+                    <a href="/admin/settings/" class="btn-section">Configure</a>
+                </div>
+            </div>
+
+            <div class="section-card">
+                <div class="section-header">
+                    <span>📊</span> Reports & Analytics
+                </div>
+                <div class="section-body">
+                    <p>View detailed analytics and generate reports.</p>
+                    <div class="list-item">
+                        <span class="list-item-name">Page Views</span>
+                        <span class="list-item-value">45.2K</span>
+                    </div>
+                    <div class="list-item">
+                        <span class="list-item-name">New Registrations</span>
+                        <span class="list-item-value">234</span>
+                    </div>
+                    <div class="list-item">
+                        <span class="list-item-name">Conversion Rate</span>
+                        <span class="list-item-value">3.2%</span>
+                    </div>
+                    <br>
+                    <a href="/admin/reports/" class="btn-section">View Reports</a>
+                </div>
+            </div>
+
+            <div class="section-card">
+                <div class="section-header">
+                    <span>🔐</span> Security
+                </div>
+                <div class="section-body">
+                    <p>Monitor security logs and manage access controls.</p>
+                    <div class="list-item">
+                        <span class="list-item-name">Recent Logins</span>
+                        <span class="list-item-value">342</span>
+                    </div>
+                    <div class="list-item">
+                        <span class="list-item-name">Failed Attempts</span>
+                        <span class="list-item-value">5</span>
+                    </div>
+                    <div class="list-item">
+                        <span class="list-item-name">Alerts</span>
+                        <span class="list-item-value">0</span>
+                    </div>
+                    <br>
+                    <a href="/admin/security/" class="btn-section">Security Logs</a>
+                </div>
+            </div>
+
+            <div class="section-card">
+                <div class="section-header">
+                    <span>💬</span> Support & Feedback
+                </div>
+                <div class="section-body">
+                    <p>View user feedback and support tickets.</p>
+                    <div class="list-item">
+                        <span class="list-item-name">Open Tickets</span>
+                        <span class="list-item-value">8</span>
+                    </div>
+                    <div class="list-item">
+                        <span class="list-item-name">Resolved Today</span>
+                        <span class="list-item-value">12</span>
+                    </div>
+                    <div class="list-item">
+                        <span class="list-item-name">Avg Response Time</span>
+                        <span class="list-item-value">2h 15m</span>
+                    </div>
+                    <br>
+                    <a href="/admin/support/" class="btn-section">View Tickets</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Admin Dashboard © 2026 | Last login: Today 14:32 | System Status: Operational</p>
+        </div>
+    </div>
+
+    <!-- GSAP Animations -->
+    <script>
+        window.addEventListener('load', () => {
+            if (window.gsap) {
+                if (window.ScrollTrigger) {
+                    gsap.registerPlugin(ScrollTrigger);
+                }
+
+        // Animate background particles
+        gsap.to('.bg-particle:nth-child(1)', {
+            x: 100,
+            y: -50,
+            scale: 1.2,
+            duration: 8,
+            repeat: -1,
+            yoyo: true,
+            ease: 'sine.inOut'
+        });
+
+        gsap.to('.bg-particle:nth-child(2)', {
+            x: -80,
+            y: 60,
+            scale: 0.8,
+            duration: 10,
+            repeat: -1,
+            yoyo: true,
+            ease: 'sine.inOut'
+        });
+
+        gsap.to('.bg-particle:nth-child(3)', {
+            x: -50,
+            y: -80,
+            scale: 1.1,
+            duration: 9,
+            repeat: -1,
+            yoyo: true,
+            ease: 'sine.inOut'
+        });
+
+        // Animate header on load
+        gsap.from('.header h1', {
+            duration: 1,
+            y: -50,
+            opacity: 0,
+            ease: 'bounce.out'
+        });
+
+        gsap.from('.header-actions .btn-small', {
+            duration: 0.8,
+            x: 50,
+            opacity: 0,
+            stagger: 0.2,
+            ease: 'power3.out',
+            delay: 0.3
+        });
+
+        // Set initial states for GSAP animations
+        gsap.set(['.stat-card', '.section-card', '.footer'], { opacity: 0 });
+
+        // Animate stat cards
+        gsap.from('.stat-card', {
+            scrollTrigger: {
+                trigger: '.stats-grid',
+                start: 'top 80%',
+                toggleActions: 'play none none none'
+            },
+            duration: 0.8,
+            y: 50,
+            opacity: 0,
+            stagger: 0.15,
+            ease: 'power3.out'
+        });
+
+        // Animate stat numbers with counting effect
+        document.querySelectorAll('.stat-number').forEach((el, index) => {
+            const text = el.textContent;
+            const hasPercent = text.includes('%');
+            const hasPlus = text.includes('+');
+            
+            if (!isNaN(parseFloat(text))) {
+                const endValue = parseFloat(text.replace(/[^0-9.-]/g, ''));
+                const obj = { value: 0 };
+                
+                gsap.to(obj, {
+                    scrollTrigger: {
+                        trigger: '.stats-grid',
+                        start: 'top 80%',
+                    },
+                    value: endValue,
+                    duration: 2,
+                    delay: index * 0.15,
+                    ease: 'power1.out',
+                    onUpdate: function() {
+                        let displayValue = Math.round(obj.value);
+                        if (text.includes('.')) {
+                            displayValue = obj.value.toFixed(1);
+                        }
+                        el.textContent = (hasPlus ? '+' : '') + displayValue + (hasPercent ? '%' : '');
+                    }
+                });
+            }
+        });
+
+        // Animate section cards
+        gsap.from('.section-card', {
+            scrollTrigger: {
+                trigger: '.sections',
+                start: 'top 80%',
+                toggleActions: 'play none none none'
+            },
+            duration: 0.8,
+            y: 80,
+            opacity: 0,
+            stagger: 0.2,
+            ease: 'back.out(1.2)'
+        });
+
+        // Animate list items on scroll
+        document.querySelectorAll('.section-card').forEach((card) => {
+            gsap.from(card.querySelectorAll('.list-item'), {
+                scrollTrigger: {
+                    trigger: card,
+                    start: 'top 80%',
+                },
+                duration: 0.6,
+                x: -30,
+                opacity: 0,
+                stagger: 0.1,
+                ease: 'power2.out'
+            });
+        });
+
+        // Animate footer
+        gsap.from('.footer', {
+            scrollTrigger: {
+                trigger: '.footer',
+                start: 'top 90%',
+            },
+            duration: 1,
+            y: 30,
+            opacity: 0,
+            ease: 'power2.out'
+        });
+
+        // Hover animation for stat icons
+        document.querySelectorAll('.stat-icon').forEach(icon => {
+            icon.addEventListener('mouseenter', () => {
+                gsap.to(icon, {
+                    scale: 1.3,
+                    rotation: 360,
+                    duration: 0.5,
+                    ease: 'back.out(2)'
+                });
+            });
+            
+            icon.addEventListener('mouseleave', () => {
+                gsap.to(icon, {
+                    scale: 1,
+                    rotation: 0,
+                    duration: 0.5,
+                    ease: 'power2.out'
+                });
+            });
+        });
+
+        // Parallax effect for section headers
+        gsap.utils.toArray('.section-header').forEach(header => {
+            gsap.to(header, {
+                scrollTrigger: {
+                    trigger: header,
+                    start: 'top bottom',
+                    end: 'bottom top',
+                    scrub: 1
+                },
+                backgroundPosition: '200% center',
+                ease: 'none'
+            });
+        });
+
+        // Button click animation
+        document.querySelectorAll('.btn-section, .btn-small').forEach(btn => {
+            btn.addEventListener('click', function() {
+                gsap.to(this, {
+                    scale: 0.95,
+                    duration: 0.1,
+                    yoyo: true,
+                    repeat: 1,
+                    ease: 'power2.inOut'
+                });
+            });
+        });
+            } else {
+                const headerTitle = document.querySelector('.header h1');
+                const headerButtons = document.querySelectorAll('.header-actions .btn-small');
+                const statCards = document.querySelectorAll('.stat-card');
+                const sectionCards = document.querySelectorAll('.section-card');
+                const footer = document.querySelector('.footer');
+
+                if (headerTitle) {
+                    headerTitle.style.animation = 'revealUp 0.8s ease forwards';
+                }
+
+                headerButtons.forEach((btn, index) => {
+                    btn.style.animation = `revealRight 0.6s ease ${0.2 + index * 0.1}s forwards`;
+                });
+
+                statCards.forEach((card, index) => {
+                    card.style.animation = `revealUp 0.6s ease ${0.3 + index * 0.1}s forwards`;
+                });
+
+                sectionCards.forEach((card, index) => {
+                    card.style.animation = `revealUp 0.6s ease ${0.4 + index * 0.1}s forwards`;
+                });
+
+                if (footer) {
+                    footer.style.animation = 'revealUp 0.8s ease 0.6s forwards';
+                }
+            }
+        });
+
+        // 15-minute countdown timer
+        let countdownInterval = null;
+        let remainingSeconds = 15* 60; // 15 minutes
+        
+        function updateCountdownDisplay() {
+            const countdownDisplay = document.getElementById('countdownDisplay');
+            const countdownTimer = document.getElementById('countdownTimer');
+            
+            if (!countdownDisplay || !countdownTimer) return;
+            
+            const minutes = Math.floor(remainingSeconds / 60);
+            const seconds = remainingSeconds % 60;
+            
+            // Format display: MM:SS
+            const displayText = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            countdownDisplay.textContent = displayText;
+            
+            // Update styling based on time remaining
+            countdownTimer.classList.remove('warning', 'critical');
+            
+            if (remainingSeconds <= 30) {
+                countdownTimer.classList.add('critical');
+            } else if (remainingSeconds <= 300) {
+                countdownTimer.classList.add('warning');
+            }
+            
+            // Countdown logic
+            if (remainingSeconds > 0) {
+                remainingSeconds--;
+            } else {
+                // Time expired
+                if (countdownInterval) {
+                    clearInterval(countdownInterval);
+                    countdownInterval = null;
+                }
+                countdownTimer.classList.add('critical');
+                countdownDisplay.textContent = '00:00';
+                alert('Your session has expired. Redirecting to logout...');
+                window.location.href = '/admin_logout/';
+            }
+        }
+        
+        // Start countdown
+        function startCountdown() {
+            updateCountdownDisplay();
+            if (countdownInterval) clearInterval(countdownInterval);
+            countdownInterval = setInterval(updateCountdownDisplay, 1000);
+        }
+        
+        // Reset countdown on user activity
+        let activityTimeout = null;
+        function handleUserActivity() {
+            if (activityTimeout) clearTimeout(activityTimeout);
+            
+            activityTimeout = setTimeout(() => {
+                remainingSeconds = 15 * 60;
+                updateCountdownDisplay();
+            }, 2000); // Reset only after 2 seconds of inactivity
+        }
+        
+        document.addEventListener('mousemove', handleUserActivity, true);
+        document.addEventListener('keypress', handleUserActivity, true);
+        document.addEventListener('click', handleUserActivity, true);
+        
+        // Initialize when page loads
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', startCountdown);
+        } else {
+            startCountdown();
+        }
+    </script>
+</body>
+</html>

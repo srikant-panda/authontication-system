@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>500 - Server Error</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 50%, #c41e3a 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Animated background particles */
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 15s infinite ease-in-out;
+        }
+
+        .particle:nth-child(1) {
+            width: 80px;
+            height: 80px;
+            left: 10%;
+            top: 20%;
+            animation-delay: 0s;
+        }
+
+        .particle:nth-child(2) {
+            width: 60px;
+            height: 60px;
+            left: 80%;
+            top: 60%;
+            animation-delay: 2s;
+        }
+
+        .particle:nth-child(3) {
+            width: 100px;
+            height: 100px;
+            left: 20%;
+            top: 70%;
+            animation-delay: 4s;
+        }
+
+        .particle:nth-child(4) {
+            width: 50px;
+            height: 50px;
+            left: 70%;
+            top: 30%;
+            animation-delay: 6s;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0.3;
+            }
+            50% {
+                transform: translateY(-50px) rotate(180deg);
+                opacity: 0.8;
+            }
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.35);
+            padding: 70px 50px;
+            max-width: 550px;
+            width: 100%;
+            text-align: center;
+            animation: slideUp 0.6s ease-out;
+            position: relative;
+            z-index: 10;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .emoji {
+            font-size: 100px;
+            margin-bottom: 25px;
+            animation: shake 2s ease-in-out infinite;
+            display: inline-block;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: rotate(0deg); }
+            10% { transform: rotate(-5deg); }
+            20% { transform: rotate(5deg); }
+            30% { transform: rotate(-5deg); }
+            40% { transform: rotate(5deg); }
+            50% { transform: rotate(0deg); }
+        }
+
+        h1 {
+            color: #333;
+            font-size: 38px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            letter-spacing: -0.5px;
+            animation: fadeIn 0.8s ease-out 0.2s backwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .subtitle {
+            color: #999;
+            font-size: 16px;
+            margin-bottom: 30px;
+            font-weight: 400;
+            animation: fadeIn 0.8s ease-out 0.3s backwards;
+        }
+
+        .message {
+            background: linear-gradient(135deg, #fff5f5 0%, #ffe6e6 100%);
+            border-left: 5px solid #ff6b6b;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 30px 0;
+            text-align: left;
+            line-height: 1.8;
+            animation: fadeIn 0.8s ease-out 0.4s backwards;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .message::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% {
+                transform: translateX(-100%) translateY(-100%) rotate(45deg);
+            }
+            100% {
+                transform: translateX(100%) translateY(100%) rotate(45deg);
+            }
+        }
+
+        .message p {
+            color: #555;
+            font-size: 15px;
+            margin: 8px 0;
+        }
+
+        .message strong {
+            color: #333;
+        }
+
+        .quote {
+            background: linear-gradient(135deg, #fff5f5 0%, #ffe6e6 100%);
+            border-radius: 10px;
+            padding: 25px;
+            margin: 30px 0;
+            font-style: italic;
+            color: #ff6b6b;
+            font-size: 16px;
+            line-height: 1.6;
+            border: 2px solid #ffc0cb;
+            animation: fadeIn 0.8s ease-out 0.5s backwards;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .quote:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.2);
+        }
+
+        .quote::before {
+            content: '"';
+            font-size: 40px;
+            color: #ff6b6b;
+            opacity: 0.3;
+            display: block;
+            line-height: 0.5;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 45px;
+            flex-wrap: wrap;
+            animation: fadeIn 0.8s ease-out 0.6s backwards;
+        }
+
+        .btn {
+            padding: 15px 35px;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 180px;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            min-height: 50px;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-home {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        .btn-home:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(255, 107, 107, 0.4);
+        }
+
+        .btn-admin {
+            background: white;
+            color: #ff6b6b;
+            border: 2px solid #ff6b6b;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.1);
+        }
+
+        .btn-admin:hover {
+            background: #ff6b6b;
+            color: white;
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(255, 107, 107, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(-2px) scale(0.98);
+        }
+
+        .btn .icon {
+            position: relative;
+            z-index: 1;
+            font-size: 20px;
+        }
+
+        .btn span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .status-box {
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 2px solid #ffe6e6;
+            animation: fadeIn 0.8s ease-out 0.7s backwards;
+        }
+
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: #ff6b6b;
+            font-weight: 600;
+            font-size: 15px;
+            background: #fff5f5;
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: 2px solid #ffb3b3;
+        }
+
+        .status::before {
+            content: '⚠️';
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .timestamp {
+            color: #999;
+            font-size: 12px;
+            margin-top: 20px;
+            font-weight: 400;
+        }
+
+        .countdown-timer {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            position: relative;
+            z-index: 1;
+            background: rgba(255, 107, 107, 0.15);
+            border: 1px solid rgba(255, 107, 107, 0.4);
+            padding: 12px 20px;
+            border-radius: 8px;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 0 15px rgba(255, 107, 107, 0.2);
+            margin-top: 20px;
+        }
+
+        .countdown-timer.warning {
+            background: rgba(255, 193, 7, 0.15);
+            border-color: rgba(255, 193, 7, 0.4);
+            box-shadow: 0 0 15px rgba(255, 193, 7, 0.2);
+        }
+
+        .countdown-timer.critical {
+            background: rgba(255, 107, 107, 0.25);
+            border-color: rgba(255, 107, 107, 0.6);
+            box-shadow: 0 0 20px rgba(255, 107, 107, 0.4);
+            animation: pulse-critical 1s ease-in-out infinite;
+        }
+
+        @keyframes pulse-critical {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .countdown-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #ffb3b3;
+            font-weight: 600;
+        }
+
+        .countdown-timer.warning .countdown-label {
+            color: #ffd699;
+        }
+
+        .countdown-time {
+            font-size: 20px;
+            font-weight: 700;
+            color: #ff6b6b;
+            font-family: 'Courier New', monospace;
+            min-width: 80px;
+            text-align: center;
+            text-shadow: 0 0 8px rgba(255, 107, 107, 0.5);
+        }
+
+        .countdown-timer.warning .countdown-time {
+            color: #ffc107;
+            text-shadow: 0 0 8px rgba(255, 193, 7, 0.5);
+        }
+
+        .countdown-icon {
+            font-size: 22px;
+            animation: countdown-pulse 1s ease-in-out infinite;
+        }
+
+        @keyframes countdown-pulse {
+            0%, 100% {
+                transform: scale(1) rotate(0deg);
+            }
+            50% {
+                transform: scale(1.2) rotate(-15deg);
+            }
+        }
+
+        .countdown-timer.critical .countdown-icon {
+            animation: countdown-pulse 0.5s ease-in-out infinite;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+
+            .container {
+                padding: 45px 25px;
+                max-width: 100%;
+                border-radius: 15px;
+            }
+
+            h1 {
+                font-size: 32px;
+                margin-bottom: 10px;
+            }
+
+            .subtitle {
+                font-size: 15px;
+                margin-bottom: 20px;
+            }
+
+            .emoji {
+                font-size: 80px;
+                margin-bottom: 20px;
+            }
+
+            .message {
+                padding: 18px;
+                margin: 25px 0;
+                border-radius: 8px;
+            }
+
+            .message p {
+                font-size: 14px;
+                margin: 6px 0;
+            }
+
+            .quote {
+                font-size: 15px;
+                padding: 20px;
+                margin: 25px 0;
+                border-radius: 8px;
+            }
+
+            .button-group {
+                flex-direction: column;
+                gap: 12px;
+                margin-top: 35px;
+            }
+
+            .btn {
+                width: 100%;
+                min-width: unset;
+                padding: 14px 25px;
+                font-size: 13px;
+                letter-spacing: 0.5px;
+                min-height: 48px;
+            }
+
+            .btn .icon {
+                font-size: 18px;
+            }
+
+            .status-box {
+                margin-top: 35px;
+                padding-top: 25px;
+            }
+
+            .status {
+                width: 100%;
+                justify-content: center;
+                font-size: 14px;
+                padding: 10px 15px;
+            }
+
+            .timestamp {
+                font-size: 11px;
+                margin-top: 15px;
+            }
+
+            .countdown-timer {
+                margin-top: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 35px 20px;
+                box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+            }
+
+            h1 {
+                font-size: 26px;
+                margin-bottom: 8px;
+            }
+
+            .subtitle {
+                font-size: 13px;
+                margin-bottom: 15px;
+            }
+
+            .emoji {
+                font-size: 65px;
+                margin-bottom: 15px;
+            }
+
+            .message {
+                padding: 15px;
+                margin: 20px 0;
+                font-size: 13px;
+            }
+
+            .message p {
+                font-size: 13px;
+                margin: 5px 0;
+            }
+
+            .quote {
+                font-size: 13px;
+                padding: 18px;
+                margin: 20px 0;
+            }
+
+            .quote::before {
+                font-size: 30px;
+            }
+
+            .button-group {
+                gap: 10px;
+                margin-top: 25px;
+            }
+
+            .btn {
+                padding: 12px 20px;
+                font-size: 12px;
+                letter-spacing: 0.3px;
+                min-height: 44px;
+                gap: 6px;
+            }
+
+            .btn .icon {
+                font-size: 16px;
+            }
+
+            .status-box {
+                margin-top: 25px;
+                padding-top: 20px;
+            }
+
+            .status {
+                font-size: 13px;
+                padding: 10px 12px;
+            }
+
+            .status::before {
+                font-size: 18px;
+            }
+
+            .timestamp {
+                font-size: 10px;
+                margin-top: 12px;
+            }
+
+            .countdown-timer {
+                font-size: 13px;
+                padding: 10px 15px;
+                margin-top: 15px;
+            }
+
+            .countdown-time {
+                font-size: 16px;
+                min-width: 60px;
+            }
+
+            .countdown-icon {
+                font-size: 18px;
+            }
+        }
+
+        @media (max-width: 320px) {
+            .container {
+                padding: 30px 15px;
+            }
+
+            h1 {
+                font-size: 22px;
+            }
+
+            .emoji {
+                font-size: 55px;
+            }
+
+            .btn {
+                padding: 11px 15px;
+                font-size: 11px;
+                min-height: 42px;
+            }
+
+            .quote {
+                font-size: 12px;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated background particles -->
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+
+    <div class="container">
+        <div class="emoji">⚠️</div>
+        
+        <h1>Oops! Server Error</h1>
+        <p class="subtitle">Something went wrong on our end (Error 500)</p>
+
+        <div class="message">
+            <p><strong>⚠️ Internal Server Error</strong></p>
+            <p>An unexpected error occurred while processing your request. Our team has been notified.</p>
+        </div>
+
+        <div class="quote">
+            "Every error is just an opportunity in disguise. We'll be back stronger!"
+        </div>
+
+        <div class="button-group">
+            <a href="/" class="btn btn-home">
+                <span class="icon">🏠</span>
+                Back to Home
+            </a>
+            <a href="/admin/" class="btn btn-admin">
+                <span class="icon">🛡️</span>
+                Admin Dashboard
+            </a>
+        </div>
+
+        <div class="status-box">
+            <div class="countdown-timer" id="countdownTimer">
+                <span class="countdown-icon">⏱️</span>
+                <div>
+                    <div class="countdown-label">Auto-Redirect</div>
+                    <div class="countdown-time" id="countdownDisplay">15:00</div>
+                </div>
+            </div>
+            <div class="timestamp">
+                Error ID: SRV-500-{{ timestamp }}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 15-minute countdown timer
+        let countdownInterval = null;
+        let remainingSeconds = 15 * 60; // 15 minutes
+        
+        function updateCountdownDisplay() {
+            const countdownDisplay = document.getElementById('countdownDisplay');
+            const countdownTimer = document.getElementById('countdownTimer');
+            
+            if (!countdownDisplay || !countdownTimer) return;
+            
+            const minutes = Math.floor(remainingSeconds / 60);
+            const seconds = remainingSeconds % 60;
+            
+            // Format display: MM:SS
+            const displayText = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            countdownDisplay.textContent = displayText;
+            
+            // Update styling based on time remaining
+            countdownTimer.classList.remove('warning', 'critical');
+            
+            if (remainingSeconds <= 60) {
+                countdownTimer.classList.add('critical');
+            } else if (remainingSeconds <= 300) {
+                countdownTimer.classList.add('warning');
+            }
+            
+            // Countdown logic
+            if (remainingSeconds > 0) {
+                remainingSeconds--;
+            } else {
+                // Time expired
+                if (countdownInterval) {
+                    clearInterval(countdownInterval);
+                    countdownInterval = null;
+                }
+                countdownTimer.classList.add('critical');
+                countdownDisplay.textContent = '00:00';
+                window.location.href = '/';
+            }
+        }
+        
+        // Start countdown
+        function startCountdown() {
+            updateCountdownDisplay();
+            if (countdownInterval) clearInterval(countdownInterval);
+            countdownInterval = setInterval(updateCountdownDisplay, 1000);
+        }
+        
+        // Initialize when page loads
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', startCountdown);
+        } else {
+            startCountdown();
+        }
+    </script>
+</body>
+</html>
