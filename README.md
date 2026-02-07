@@ -82,12 +82,4 @@ Visit `http://127.0.0.1:8000/` in your browser.
 * **Templates:** Utilizes Template Inheritance (`base.html`) to keep the code DRY (Don't Repeat Yourself).
 * **Security:** Leverages Django's CSRF protection for all authentication forms.
 
----
-
-## 📝 License
-
-This project is open-source and available under the [MIT License](https://www.google.com/search?q=LICENSE).
-
----
-
 Would you like me to help you write the `views.py` logic for a custom registration form to include in this project?
